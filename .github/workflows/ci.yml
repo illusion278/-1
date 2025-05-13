@@ -1,0 +1,40 @@
+name: C++ CI Pipeline  # Фиксим название
+
+on:  # Правильный синтаксис триггеров
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Исправляем опечатку (было runz-on)
+
+    steps:
+      # 1. Получение кода
+      - uses: actions/checkout@v3  # Правильное название действия
+
+      # 2. Установка зависимостей
+      - name: Install dependencies  # Исправляем runs на name
+        run: |  # Отступы важны!
+          sudo apt-get update
+          sudo apt-get install -y g++ cmake make  # Исправляем g+s на g++
+
+      # 3. Конфигурация CMake
+      - name: Configure
+        run: |
+          mkdir -p build  # Исправляем endstr на mkdir
+          cd build
+          cmake ..  # Исправляем ... на ..
+
+      # 4. Сборка
+      - name: Build
+        run: |
+          cd build
+          make -j4
+
+      # 5. Тестирование
+      - name: Test
+        run: |
+          cd build
+          ctest --output-on-failure

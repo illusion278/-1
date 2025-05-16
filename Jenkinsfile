@@ -1,23 +1,28 @@
 pipeline {
-    agent any  // Запуск на любом доступном агенте (включая Windows)
+    agent any
+    tools {
+        cmake 'CMake'  // Имя инструмента, настроенного в Jenkins
+    }
     stages {
         stage('Checkout') {
             steps {
-                checkout scm  // Клонирование репозитория (работает на всех ОС)
+                checkout scm
             }
         }
         stage('Build') {
             steps {
-                bat '''  // Заменяем sh на bat для Windows
+		bat 'cmake --version'
+                bat '''
                 if not exist build mkdir build
                 cd build
-                cmake .. && cmake --build . --config Release
+                cmake .. 
+                cmake --build . --config Release
                 '''
             }
         }
-        stage('Test') {  // Опционально
+        stage('Test') {
             steps {
-                bat '''  // Заменяем sh на bat
+                bat '''
                 cd build
                 ctest --output-on-failure
                 '''
@@ -26,7 +31,7 @@ pipeline {
     }
     post {
         always {
-            archiveArtifacts artifacts: 'build/**/*'  // Сохранение артефактов
+            archiveArtifacts artifacts: 'build/**/*'
         }
     }
 }

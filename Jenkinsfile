@@ -1,23 +1,26 @@
 pipeline {
-    agent any  // Запуск на любом доступном агенте
+    agent any  // Запуск на любом доступном агенте (включая Windows)
     stages {
         stage('Checkout') {
             steps {
-                checkout scm  // Клонирование репозитория
+                checkout scm  // Клонирование репозитория (работает на всех ОС)
             }
         }
         stage('Build') {
             steps {
-                sh '''
-                mkdir -p build
+                bat '''  // Заменяем sh на bat для Windows
+                if not exist build mkdir build
                 cd build
-                cmake .. && make
+                cmake .. && cmake --build . --config Release
                 '''
             }
         }
         stage('Test') {  // Опционально
             steps {
-                sh 'cd build && ctest --output-on-failure'
+                bat '''  // Заменяем sh на bat
+                cd build
+                ctest --output-on-failure
+                '''
             }
         }
     }

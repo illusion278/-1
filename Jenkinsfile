@@ -8,12 +8,13 @@ pipeline {
         }
         stage('Build') {
             steps {
-                bat """
+                bat '''
+                cd C:\\ProgramData\\Jenkins\\workspace\\jamesreturn27
                 if not exist build mkdir build
                 cd build
-                "C:\\Program Files\\CMake\\bin\\cmake.exe" ..
+                "C:\\Program Files\\CMake\\bin\\cmake.exe" "C:\\ProgramData\\Jenkins\\workspace\\jamesreturn27"
                 "C:\\Program Files\\CMake\\bin\\cmake.exe" --build . --config Release
-                """
+                '''
             }
         }
     }
